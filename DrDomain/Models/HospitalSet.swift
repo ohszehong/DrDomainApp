@@ -10,5 +10,5 @@ import Foundation
 
 class HospitalSet
 {
-    static var hospitalSet = [""]
+    static var hospitalSet = ["All","Huntington Hospital","Southern California Hospital at Culver City","Kindred Hospital San Diego"]
 }

@@ -18,7 +18,6 @@ class EditInfoPopUpViewController: UIViewController {
     @IBOutlet weak var txtEditText: UITextField!
     @IBOutlet weak var btnSaveChanges: UIButton!
     @IBOutlet weak var btnCancel: UIButton!
-    @IBOutlet weak var UIViewTitleBox: UIView!
     @IBOutlet weak var lblErrorText: UILabel!
     
     
@@ -26,6 +25,7 @@ class EditInfoPopUpViewController: UIViewController {
     var editBoxTitle = ""
     var editTextplaceholder = ""
     let UC = UserControllers()
+    var userRole = ""
     
     
     override func viewDidLoad() {
@@ -37,11 +37,6 @@ class EditInfoPopUpViewController: UIViewController {
     
     func setupEditBox()
     {
-        UIViewEditBox.layer.borderWidth = 1
-        UIViewEditBox.layer.cornerRadius = 25
-        UIViewTitleBox.clipsToBounds = true
-        UIViewTitleBox.layer.cornerRadius = 25
-        UIViewTitleBox.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         lblEditTitle.text = editBoxTitle
         txtEditText.placeholder = editTextplaceholder
     }
@@ -68,8 +63,10 @@ class EditInfoPopUpViewController: UIViewController {
                 
                 else
                 {
-                    UC.editCommonInfo("Name", newName)
+     
+                    UC.editCommonInfo("Name", newName, userRole)
                     dismiss(animated: true, completion: nil)
+                    
                 }
                 
             }
@@ -87,7 +84,7 @@ class EditInfoPopUpViewController: UIViewController {
                 
                 else
                 {
-                    UC.editCommonInfo("Contact Number", newPhone)
+                    UC.editCommonInfo("Contact Number", newPhone, userRole)
                     dismiss(animated: true, completion: nil)
                 }
                 

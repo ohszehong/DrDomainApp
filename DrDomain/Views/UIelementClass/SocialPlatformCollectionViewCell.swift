@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class SocialPlatformCollectionViewCell: UICollectionViewCell {
     
@@ -23,7 +24,7 @@ class SocialPlatformCollectionViewCell: UICollectionViewCell {
     //variables
     var indexRow: Int = 0
     var parentCollectionView: UICollectionView?
-    
+    var userRole = ""
     
     func setupCommon(_ iconImageName: String, _ celltype: String)
     {
@@ -38,19 +39,38 @@ class SocialPlatformCollectionViewCell: UICollectionViewCell {
         
     }
     
+    func setupUserRole(_ userRole: String)
+    {
+        self.userRole = userRole
+    }
+    
+    func setupTextTapppedGesture()
+    {
+        let textTappedGesture = UITapGestureRecognizer(target: self, action: #selector(handleOpenLink))
+        
+        self.lblInfoTextStr.addGestureRecognizer(textTappedGesture)
+        
+        self.lblInfoTextStr.isUserInteractionEnabled = true
+    }
+    
+    @objc func handleOpenLink()
+    {
+        let urlString = lblInfoTextStr.text!
+        let validUrlString = urlString.hasPrefix("http") ? urlString : "http://\(urlString)"
+        let url = URL(string: validUrlString)
+        let vc = SFSafariViewController(url: url!)
+        ViewControllersLinkers.patientInfoVC?.present(vc, animated: true, completion: nil)
+        
+    }
+    
     func setupInfoTextStr(_ InfoTextStr: String)
     {
         lblInfoTextStr.text = InfoTextStr
-        lblInfoTextStr.sizeToFit()
     }
     
     func setupbtnInfoText(_ InfoTextLink: String)
     {
         lblInfoText.setTitle(InfoTextLink, for: .normal)
-    }
-    
-    @IBAction func addNewLink(_ sender: UIButton) {
-        print(123)
     }
     
     func setupIndex(_ indexRow: Int)
@@ -62,22 +82,22 @@ class SocialPlatformCollectionViewCell: UICollectionViewCell {
         
         
         let UC = UserControllers()
-        let parentViewController = PatientPersonalInfoViewController()
         
-        UC.deleteSocialPlatform(indexRow)
+        UC.deleteSocialPlatform(indexRow, userRole)
         {
             (socialplatformArray) in
             
-            parentViewController.userSocialPlatform = socialplatformArray
+            //use the linker to access to PatientInfoPersonalViewController elements
+            ViewControllersLinkers.patientInfoVC?.userSocialPlatform = socialplatformArray
             
-        }
-     
-        DispatchQueue.main.async {
-            self.parentCollectionView!.reloadData()
-        }
+            self.parentCollectionView?.performBatchUpdates({
+                let indexSet = IndexSet(integer: 0)
+                self.parentCollectionView?.reloadSections(indexSet)
+            }, completion: nil)
+
         
-        print(indexRow)
-        
+    
+        }
         
     }
     

@@ -77,10 +77,14 @@ class LoginRegisterViewController: UIViewController
                 //is a prefix for doctor email
                 if tempStr == "doctor"
                 {
+                    self.txtEmail.text = ""
+                    self.txtPassword.text = ""
                     self.performSegue(withIdentifier: "DoctorMainPage", sender: self)
                 }
                 else
                 {
+                    self.txtEmail.text = ""
+                    self.txtPassword.text = ""
                     self.performSegue(withIdentifier: "PatientMainPage", sender: self)
                 }
                 

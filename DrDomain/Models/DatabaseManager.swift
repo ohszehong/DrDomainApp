@@ -73,51 +73,59 @@ class DatabaseManager
         
      }
     
-    //upload profile image into firebase
-    func uploadProfileImageIntoFirebase(_ imageData: Data, completion:@escaping(_ imageUrlString: String) -> ())
-    {
-        //get user id as profileimage name
-        let userID = Auth.auth().currentUser?.uid
-        let newImageName = userID! + ".png"
-        
-        let profileImageStorageRef = storageRef.child("user_profileImage").child(newImageName)
-        profileImageStorageRef.putData(imageData, metadata: nil) { (metadata, error) in
-            if error != nil
-            {
-                print(error!)
-                return
-            }
+    func fetchCurrentDoctor(_ doctorID: String, completion:@escaping(Doctor) -> ())
+       {
+           
+           var doctorName: String = ""
+           var doctorDomain: String = ""
+           var doctorEducation:Array<String> = []
+           var doctorLocation:NSDictionary = [String: String]() as NSDictionary
+           var totalPeopleRated: Int = 0
+           var totalRating: Double = 0
+           var meetingTimeInterval: Int = 0
+           var acceptAppoint: Bool = true
+           var doctorEmail: String = ""
+           var doctorGender: String = ""
+           var doctorPhone: String = ""
+           var doctorProfileImage: String = ""
+           var doctorSocialPlatform: Array<String> = []
+           
+           let databaseRef = Database.database().reference(fromURL: "https://drdomain-b814f.firebaseio.com/")
+           let UserRef = databaseRef.child("doctors").child(doctorID)
+           
+           UserRef.observeSingleEvent(of: .value, with:
+           {
+               
+               (snapshot) in
+               //get user value
+               
+               let value = snapshot.value as? NSDictionary
+
+               doctorName = value?["name"] as! String
+               doctorDomain = value?["domain"] as! String
+               doctorEmail = value?["email"] as! String
+               doctorGender = value?["gender"] as! String
+               doctorPhone = value?["phone"] as! String
+               doctorProfileImage = value?["profileImgURL"] as! String
+               doctorSocialPlatform = value?["socialplatform"] as! Array<String>
+               doctorEducation = value?["education"] as! Array<String>
+               doctorLocation = value?["location"] as! NSDictionary
+               totalPeopleRated = value?["totalPeopleRated"] as! Int
+               totalRating = value?["totalRating"] as! Double
+               meetingTimeInterval = value?["meetingTimeInterval"] as! Int
+               acceptAppoint = value?["acceptAppoint"] as! Bool
+               
+               let doctor = Doctor(doctorID, doctorName, doctorDomain, doctorEmail, doctorEducation, doctorGender, doctorPhone, doctorLocation, doctorProfileImage, doctorSocialPlatform, totalPeopleRated, totalRating, meetingTimeInterval, acceptAppoint)
             
-            print(metadata!)
-            //update user profile image URL in real time database as well
-            let userRef = self.databaseRef.child("users").child(userID!)
-            
-            profileImageStorageRef.downloadURL { (url, error) in
-                guard let downloadURL = url
-                    
-                else
-                {
-                    print(error!)
-                    return
-                }
-                
-                let imageUrlString = downloadURL.absoluteString
-                let value = ["profileImgURL": imageUrlString]
-                userRef.updateChildValues(value) { (error, databaseRef) in
-                    
-                    if error != nil
-                    {
-                        print(error!)
-                        return
-                    }
-                    
-                    completion(imageUrlString)
-                    
-                }
-            }
-            
+               completion(doctor)
+               
+           }, withCancel: {
+               
+               (error) in
+               print(error.localizedDescription)
+           })
+           
         }
-        
-    }
+    
     
 }

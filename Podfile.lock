@@ -164,6 +164,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.3):
     - BoringSSL-GRPC/Interface (= 0.0.3)
   - BoringSSL-GRPC/Interface (0.0.3)
+  - Cosmos (22.1.0)
   - Firebase/Auth (6.23.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 6.5.2)
@@ -261,17 +262,21 @@ PODS:
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
   - PromisesObjC (1.2.8)
+  - TinyConstraints (4.0.1)
 
 DEPENDENCIES:
+  - Cosmos
   - Firebase/Auth
   - Firebase/Database
   - Firebase/Firestore
   - Firebase/Storage
+  - TinyConstraints
 
 SPEC REPOS:
   trunk:
     - abseil
     - BoringSSL-GRPC
+    - Cosmos
     - Firebase
     - FirebaseAuth
     - FirebaseAuthInterop
@@ -290,10 +295,12 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - PromisesObjC
+    - TinyConstraints
 
 SPEC CHECKSUMS:
   abseil: 18063d773f5366ff8736a050fe035a28f635fd27
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
+  Cosmos: 2795b36ad4bbea1af3050d6d65576ed63875f86a
   Firebase: 585ae467b3edda6a5444e788fda6888f024d8d6f
   FirebaseAuth: e50319ecc114acf93c2b9581e15d6604ddd7eeb2
   FirebaseAuthInterop: a0f37ae05833af156e72028f648d313f7e7592e9
@@ -312,7 +319,8 @@ SPEC CHECKSUMS:
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
+  TinyConstraints: 8dd91295e56797648c7bc335dd20e1d91ec4c192
 
-PODFILE CHECKSUM: 2af6c18adb47290a0d7e09b9e0543a82d5c2aca4
+PODFILE CHECKSUM: c641b892e8f13bdf5e46505e577f731e6119556a
 
 COCOAPODS: 1.9.1

@@ -12,6 +12,8 @@ target 'DrDomain' do
   pod 'Firebase/Firestore'
   pod 'Firebase/Storage'
   pod 'Firebase/Database' 
+  pod 'Cosmos'
+  pod 'TinyConstraints' 
 
   target 'DrDomainTests' do
     inherit! :search_paths

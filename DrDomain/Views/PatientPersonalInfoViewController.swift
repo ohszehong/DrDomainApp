@@ -19,6 +19,10 @@ class PatientPersonalInfoViewController: UIViewController, UICollectionViewDeleg
     @IBOutlet weak var lblEmail: UILabel!
     @IBOutlet weak var cvSocialPlatform: UICollectionView!
     @IBOutlet weak var scrollPersonalInfo: UIScrollView!
+    @IBOutlet weak var UIViewPhoneInfoBox: UIView!
+    @IBOutlet weak var UIViewUserInfoBox: UIView!
+    @IBOutlet weak var UIViewEmailInfoBox: UIView!
+    
     
     //get the user info from previous view controller
     var userInfoDict: NSMutableDictionary = [:]
@@ -31,11 +35,24 @@ class PatientPersonalInfoViewController: UIViewController, UICollectionViewDeleg
         //set delegate for collection view
         self.cvSocialPlatform.delegate = self
         self.cvSocialPlatform.dataSource = self
-
+        
+        //set the linker
+        ViewControllersLinkers.patientInfoVC = self
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
         reloadNameAndPhone()
+        loadDescription()
+    }
+    
+    func reloadCollectionView()
+    {
+        let indexSet = IndexSet(integer: 0)
+    
+        cvSocialPlatform.performBatchUpdates({
+            cvSocialPlatform.reloadSections(indexSet)
+        }, completion: nil)
     }
    
     
@@ -55,6 +72,34 @@ class PatientPersonalInfoViewController: UIViewController, UICollectionViewDeleg
         lblName.text = userInfoDict["name"] as? String
         lblContactNumber.text = userInfoDict["phone"] as? String
         lblEmail.text = userInfoDict["email"] as? String
+        
+    }
+    
+    func setupInfoBoxBorder()
+    {
+        UIViewUserInfoBox.layer.borderWidth = 1
+        UIViewUserInfoBox.layer.borderColor = UIColor.black.cgColor
+        UIViewUserInfoBox.layer.shadowColor = UIColor.black.cgColor
+        UIViewUserInfoBox.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        UIViewUserInfoBox.layer.shadowRadius = 5
+        UIViewUserInfoBox.layer.shadowOpacity = 0.4
+        UIViewUserInfoBox.clipsToBounds = true
+        
+        UIViewPhoneInfoBox.layer.borderWidth = 1
+        UIViewPhoneInfoBox.layer.borderColor = UIColor.black.cgColor
+        UIViewPhoneInfoBox.layer.shadowColor = UIColor.black.cgColor
+        UIViewPhoneInfoBox.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        UIViewPhoneInfoBox.layer.shadowRadius = 5
+        UIViewPhoneInfoBox.layer.shadowOpacity = 0.4
+        UIViewPhoneInfoBox.clipsToBounds = true
+        
+        UIViewEmailInfoBox.layer.borderWidth = 1
+        UIViewEmailInfoBox.layer.borderColor = UIColor.black.cgColor
+        UIViewEmailInfoBox.layer.shadowColor = UIColor.black.cgColor
+        UIViewEmailInfoBox.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        UIViewEmailInfoBox.layer.shadowRadius = 5
+        UIViewEmailInfoBox.layer.shadowOpacity = 0.4
+        UIViewEmailInfoBox.clipsToBounds = true
         
     }
     
@@ -82,10 +127,14 @@ class PatientPersonalInfoViewController: UIViewController, UICollectionViewDeleg
         {
             cell = cvSocialPlatform.dequeueReusableCell(withReuseIdentifier: "AddedCell", for: indexPath) as! SocialPlatformCollectionViewCell
             
+         
             cell.setupCommon("socialmedialink", "addedCell")
             cell.setupInfoTextStr(userSocialPlatform[indexPath.row])
             cell.setupIndex(indexPath.row)
             cell.parentCollectionView = self.cvSocialPlatform
+            cell.setupTextTapppedGesture()
+            cell.setupUserRole("patient")
+            
         }
     
         return cell
@@ -101,6 +150,7 @@ class PatientPersonalInfoViewController: UIViewController, UICollectionViewDeleg
             {
                 destinationViewController.editBoxTitle = "Change Name"
                 destinationViewController.editTextplaceholder = "Enter new name"
+                destinationViewController.userRole = "patient"
             }
         }
         
@@ -108,8 +158,17 @@ class PatientPersonalInfoViewController: UIViewController, UICollectionViewDeleg
         {
             if let destinationViewController = segue.destination as? EditInfoPopUpViewController
             {
-                destinationViewController.editBoxTitle = "Change Phone Number"
+                destinationViewController.editBoxTitle = "Change Contact Number"
                 destinationViewController.editTextplaceholder = "Enter new phone number"
+                destinationViewController.userRole = "patient"
+            }
+        }
+        
+        else if segue.identifier == "AddNewLink"
+        {
+            if let destinationViewController = segue.destination as? AddNewLinkPopUpViewController
+            {
+                destinationViewController.userRole = "patient"
             }
         }
     
@@ -124,4 +183,19 @@ class PatientPersonalInfoViewController: UIViewController, UICollectionViewDeleg
     }
     
     
+    
+    
+}
+
+
+extension String {
+    var isValidURL: Bool {
+        let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        if let match = detector.firstMatch(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count)) {
+            // it is a link, if the match covers the whole string
+            return match.range.length == self.utf16.count
+        } else {
+            return false
+        }
+    }
 }
